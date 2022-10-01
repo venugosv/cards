@@ -2,9 +2,9 @@ site_name: Architecture Specs
 site_url: https://archspecs.com/
 repo_url: https://github.com/venugosv/cards
 nav:
-    - Overview: /cards/component/index.md
+    - Overview: docs/cards/component/index.md
     - Design:
-      - DCVV2: /cards/component/Design/dcvv2.md
+      - DCVV2: docs/cards/component/Design/dcvv2.md
 theme:
     name: material
 markdown_extensions:
