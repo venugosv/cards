@@ -1,0 +1,43 @@
+name: st
+serviceAccount:
+  email: cardcontrols-st@anz-x-fabric-cde-np-ba0f52.iam.gserviceaccount.com
+scheduling:
+  replicas: 1
+config:
+  extauth: fakerock
+  envVar:
+    - name: GSM_EMULATOR_HOST
+      value: fabric-card-stub.fabric-services-cde-st.svc.cluster.local:9060
+tasks:
+  - name: cardcontrols-integration-test-grpc
+    type: kubernetes
+    kubernetes:
+      serviceAccount: cardcontrols
+      istioSidecar: true
+      automountServiceAccountToken: true
+    image:
+      repository: gcr.io/anz-x-fabric-np-641432/cards/cards-integration
+    env:
+      - name: TEST_CONFIG_FILE
+        value: ./config/st.yaml
+    command:
+      - "/bin/integration-cardcontrols.test"
+      - "-test.v"
+      - "-test.run"
+      - "GRPC"
+  - name: cardcontrols-integration-test-rest
+    type: kubernetes
+    kubernetes:
+      serviceAccount: cardcontrols
+      istioSidecar: true
+      automountServiceAccountToken: true
+    image:
+      repository: gcr.io/anz-x-fabric-np-641432/cards/cards-integration
+    env:
+      - name: TEST_CONFIG_FILE
+        value: ./config/st.yaml
+    command:
+      - "/bin/integration-cardcontrols.test"
+      - "-test.v"
+      - "-test.run"
+      - "REST"

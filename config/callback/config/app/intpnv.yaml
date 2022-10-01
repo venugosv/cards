@@ -1,0 +1,45 @@
+spec:
+  port: 8080
+  log:
+    level: debug
+    payloadDecider:
+      server:
+        - /visa.service.enrollmentcallback.v1.enrollmentcallbackapi/enroll: true
+        - /visa.service.enrollmentcallback.v1.enrollmentcallbackapi/disenroll: true
+        - /visa.service.notificationcallback.v1.notificationcallbackapi/alert: true
+  commandCentre:
+    env: intpnv
+  ctm:
+    baseURL: https://service-virtualisation-pnv.fabric.gcpnp.anz/daw
+    clientIDEnvKey: projects/517918342546/secrets/apic-corp-client-id-np/versions/latest
+    maxRetries: 3
+  vault:
+    vaultAddress: https://service-virtualisation-pnv.fabric.gcpnp.anz/vault
+    authRole: gcpiamrole-fabric-encode.common
+    authPath: v1/auth/gcp-fabric
+    namespace: eaas-test
+    zone: corp
+    metadataAddress: http://metadata.google.internal
+    tokenLifetime: 13m
+    tokenErrorRetryFirstTime: 500ms
+    tokenErrorRetryMaxTime: 5m
+    tokenRenewBuffer: 2m
+  featureToggles:
+    rpc:
+      - /visa.service.enrollmentcallback.v1.enrollmentcallbackapi/enroll: true
+      - /visa.service.enrollmentcallback.v1.enrollmentcallbackapi/disenroll: true
+      - /visa.service.notificationcallback.v1.notificationcallbackapi/alert: true
+    features:
+      - ENROLLMENT_CALLBACK_INTEGRATED: true
+      - FORGEROCK_SYSTEM_LOGIN: false
+ops:
+  port: 8082
+  opentelemetry:
+    metrics:
+      exporter: collector
+    trace:
+      exporter: collector
+    exporters:
+      collector:
+        host: otelcol-otlp-grpc-preprod-ebbg6xakwa-ts.a.run.app:443
+        secure: true

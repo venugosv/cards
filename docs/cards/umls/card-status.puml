@@ -1,0 +1,30 @@
+@startuml Card Status State
+[*] --> I
+I --> S
+I --> E
+I --> T
+I --> L
+I : Issued
+
+E --> [*]
+E : Delinquent (Retain) 
+E : Unrecoverable State
+
+
+L --> [*]
+L : Lost
+L : Unrecoverable State 
+
+
+
+T --> [*]
+T --> E
+T --> S
+T --> I
+T --> L
+T: Temporary Block(OZ Only)
+
+S -> [*]
+S : Stolen
+S : Unrecoverable State
+@enduml

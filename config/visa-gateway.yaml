@@ -1,0 +1,52 @@
+app:
+  name: visa-gateway
+  port: 7080
+  auth:
+    insecure: true
+  log:
+    config:
+      codeLinks: false
+      level: debug
+    payloadDecider:
+      server:
+        - /gateway.visa.service.cardonfile.v1.cardonfileapi/inquiry: true
+        - /gateway.visa.service.customerrules.v1.customerrulesapi/createcontrols: true
+        - /gateway.visa.service.customerrules.v1.customerrulesapi/deletecontrols: true
+        - /gateway.visa.service.customerrules.v1.customerrulesapi/getcontroldocument: true
+        - /gateway.visa.service.customerrules.v1.customerrulesapi/listcontroldocuments: true
+        - /gateway.visa.service.customerrules.v1.customerrulesapi/register: true
+        - /gateway.visa.service.customerrules.v1.customerrulesapi/updateaccount: true
+        - /gateway.visa.service.customerrules.v1.customerrulesapi/updatecontrols: true
+        - /gateway.visa.service.dcvv2.v1.dcvv2api/generate: true
+  featureToggles:
+    rpc:
+      - /gateway.visa.service.cardonfile.v1.cardonfileapi/inquiry: true
+      - /gateway.visa.service.customerrules.v1.customerrulesapi/createcontrols: true
+      - /gateway.visa.service.customerrules.v1.customerrulesapi/deletecontrols: true
+      - /gateway.visa.service.customerrules.v1.customerrulesapi/getcontroldocument: true
+      - /gateway.visa.service.customerrules.v1.customerrulesapi/listcontroldocuments: true
+      - /gateway.visa.service.customerrules.v1.customerrulesapi/register: true
+      - /gateway.visa.service.customerrules.v1.customerrulesapi/updateaccount: true
+      - /gateway.visa.service.customerrules.v1.customerrulesapi/updatecontrols: true
+      - /gateway.visa.service.dcvv2.v1.dcvv2api/generate: true
+  visa:
+    host: http://visa-stub:7070
+    secrets:
+      username-secret: projects/517918342546/secrets/visa-gateway-sbx-username-secret-np/versions/latest
+      password-secret: projects/517918342546/secrets/visa-gateway-sbx-password-secret-np/versions/latest
+      key-id: projects/517918342546/secrets/visa-gateway-sbx-key-id-secret-np/versions/latest
+      mtls-cert: projects/517918342546/secrets/visa-gateway-sbx-mtls-cert-secret-np/versions/latest
+      mtls-key: projects/517918342546/secrets/visa-gateway-sbx-mtls-key-secret-np/versions/latest
+      ca-cert: projects/517918342546/secrets/visa-gateway-sbx-ca-cert-secret-np/versions/latest
+      mle-cert: projects/517918342546/secrets/visa-gateway-sbx-mle-cert-secret-np/versions/latest
+      mle-key: projects/517918342546/secrets/visa-gateway-sbx-mle-key-secret-np/versions/latest
+ops:
+  port: 7082
+  opentelemetry:
+    metrics:
+      exporter: prometheus
+    trace:
+      exporter: jaeger
+    exporters:
+      jaeger:
+        collectorEndpoint: http://localhost:14268/api/traces

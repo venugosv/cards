@@ -1,0 +1,7 @@
+name: preprod
+serviceAccount:
+  email: cardcontrols-preprod@anz-x-fabric-cde-np-ba0f52.iam.gserviceaccount.com
+scheduling:
+  replicas: 3
+config:
+  extauth: fakerock

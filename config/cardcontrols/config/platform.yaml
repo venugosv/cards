@@ -1,0 +1,20 @@
+apiVersion: fabric.anz/v1alpha1
+kind: FabricKubeApp
+metadata:
+  name: cardcontrols
+  namespacePrefix: fabric-services-cde
+spec:
+  application:
+    image:
+      repository: gcr.io/anz-x-fabric-np-641432/cards/cardcontrols
+
+envs:
+  - filePath: ./config/cardcontrols/config/platform/st.yaml
+  - filePath: ./config/cardcontrols/config/platform/sit.yaml
+  - filePath: ./config/cardcontrols/config/platform/sit-k.yaml
+  - filePath: ./config/cardcontrols/config/platform/sit-n.yaml
+  - filePath: ./config/cardcontrols/config/platform/intpnv.yaml
+  - filePath: ./config/cardcontrols/config/platform/pnv.yaml
+  - filePath: ./config/cardcontrols/config/platform/preprod.yaml
+  - filePath: ./config/cardcontrols/config/platform/preprod-k.yaml
+  - filePath: ./config/cardcontrols/config/platform/prod.yaml

@@ -1,0 +1,122 @@
+#!/bin/sh
+
+# Based on a script from https://github.com/eficode/wait-for
+
+# Usage:
+# wait-for.sh [-c command] [-h host:port] [-q] --
+
+timeout=15
+quiet=0
+
+err() {
+  if [ "${quiet}" -eq 0 ]; then
+    printf "\n%s\n" "${2}"
+    usage "${1}"
+  fi
+}
+
+usage() {
+  script=$(basename "${0}")
+  code="${1}"
+
+  cat << USAGE >&2
+Usage:
+  ${script} [-c COMMAND] [-h HOST:PORT] [-q] [-t TIMEOUT] -- COMMAND ARGS
+  -c COMMAND | --container=COMMAND The command to wait for, requires a zero exit status
+  -h HOST:POST | --host=HOST:PORT  The host/port to wait for, looks for listening daemon
+  -q | --quiet                     Do not output any status messages
+  -t TIMEOUT | --timeout=TIMEOUT   Timeout in seconds, zero for no timeout
+  -- COMMAND ARGS                  Execute command with args after the test finishes
+USAGE
+
+  exit "${code}"
+}
+
+while [ "${#}" -gt 0 ]; do
+  case "${1}" in
+    -c)
+      if [ -z "${2}" ]; then
+        err 1 "Command must be provided with -c"
+      fi
+      command="${2}"
+      shift 2
+      ;;
+    --command=*) command="${1#*=}"; shift ;;
+    -h)
+      if [ -z "${2}" ] || ! echo "${2}" | grep ':' > /dev/null 2>&1 ; then
+        err 1 "Host and port must be provided with -h"
+      fi
+      hostname="${2#*=}"
+      hostname="${hostname%:*}"
+      port="${2#*:}"
+      shift 2
+      ;;
+    --host=*:*)
+      hostname="${1#*=}"
+      hostname="${hostname%:*}"
+      port="${1#*:}"
+      shift
+      ;;
+    -q | --quiet) quiet=1; shift ;;
+    -t)
+      if [ -z "${2}" ]; then
+        err 1 "Timeout must be provided with -t"
+      fi
+      timeout="${2}"
+      shift 2
+      ;;
+    --timeout=*) timeout="${1#*=}"; shift ;;
+    --) shift; break ;;
+    *) err 1 "Unknown argument: ${1}" ;;
+  esac
+done
+
+if [ -z "${command}" ] && [ -z "${hostname}" ]; then
+  err 1 "Command or host must be provided"
+fi
+
+command_ok=0
+host_ok=0
+
+for _ in $(seq "${timeout}") ; do
+  command_result=0
+  if [ "${command_ok}" -eq 0 ] && [ -n "${command}" ]; then
+    if [ "${quiet}" -eq 1 ]; then
+      ${command} > /dev/null 2>&1
+    else
+      ${command}
+    fi
+    command_result=$?
+
+    if [ "${command_result}" -eq 0 ]; then
+      command_ok=1
+    fi
+  fi
+
+  host_result=0
+  if [ "${host_ok}" -eq 0 ] && [ -n "${hostname}" ]; then
+    if [ "${quiet}" -eq 1 ]; then
+      nc -z "${hostname}" "${port}" > /dev/null 2>&1
+    else
+      nc -z "${hostname}" "${port}"
+    fi
+    host_result=$?
+
+    if [ "${host_result}" -eq 0 ]; then
+      host_ok=1
+    fi
+  fi
+
+  if [ "${command_result}" -eq 0 ] && [ "${host_result}" -eq 0 ] ; then
+    if [ "${#}" -gt 0 ] ; then
+      exec "${@}"
+    fi
+
+    exit 0
+  fi
+
+  sleep 1
+done
+
+echo "Operation timed out" >&2
+exit 1

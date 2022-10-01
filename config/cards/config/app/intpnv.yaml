@@ -1,0 +1,119 @@
+---
+ops:
+  opentelemetry:
+    metrics:
+      exporter: collector
+    trace:
+      exporter: collector
+    exporters:
+      collector:
+        host: otelcol-otlp-grpc-preprod-ebbg6xakwa-ts.a.run.app:443
+        secure: true
+  port: 8082
+spec:
+  auditlog:
+    domain: fabric.gcp.anz
+    name: fabric-cards
+    provider: fabric
+    pubsub:
+      projectID: anz-x-fabric-np-641432
+      topicID: fabric-auditlog-intpnv
+  auth:
+    issuers:
+      - cacheTTL: 30m
+        jwksUrl: https://identity-services-pnv-int-gw.apps-int.x.gcpnp.anz/am/oauth2/system/connect/jwk_uri
+        name: https://identity-services-pnv-int-gw.apps-int.x.gcpnp.anz/am/oauth2/system
+      - cacheTTL: 30m
+        jwksUrl: https://identity-services-pnv-int-gw.apps-int.x.gcpnp.anz/am/oauth2/customer/connect/jwk_uri
+        name: https://identity-services-pnv-int-gw.apps-int.x.gcpnp.anz/am/oauth2/customer
+  cardcontrols:
+    baseURL: http://cardcontrols.fabric-services-cde-intpnv.svc.cluster.local:8080
+  commandCentre:
+    env: intpnv
+  ctm:
+    baseURL: https://service-virtualisation-pnv.fabric.gcpnp.anz/daw
+    clientIDEnvKey: projects/517918342546/secrets/apic-corp-client-id-np/versions/latest
+    maxRetries: 3
+  echidna:
+    baseURL: https://service-virtualisation-pnv.fabric.gcpnp.anz/ca
+    clientIDEnvKey: projects/517918342546/secrets/apic-corp-client-id-np/versions/latest
+    maxRetries: 3
+  eligibility:
+    baseURL: http://cards.fabric-services-cde-intpnv.svc.cluster.local:8080
+  entitlements:
+    baseURL: http://entitlements.fabric-services-intpnv.svc.cluster.local:8080
+  featureToggles:
+    features:
+      - REASON_LOST: true
+      - REASON_STOLEN: true
+      - REASON_DAMAGED: true
+      - PIN_CHANGE_COUNT: true
+      - DCVV2: false
+      - FORGEROCK_SYSTEM_LOGIN: false
+    rpc:
+      - /fabric.service.card.v1beta1.cardapi/activate: true
+      - /fabric.service.card.v1beta1.cardapi/audittrail: true
+      - /fabric.service.card.v1beta1.cardapi/changepin: true
+      - /fabric.service.card.v1beta1.cardapi/getdetails: true
+      - /fabric.service.card.v1beta1.cardapi/getwrappingkey: true
+      - /fabric.service.card.v1beta1.cardapi/list: true
+      - /fabric.service.card.v1beta1.cardapi/replace: true
+      - /fabric.service.card.v1beta1.cardapi/setpin: true
+      - /fabric.service.card.v1beta1.cardapi/verifypin: true
+      - /fabric.service.card.v1beta1.cardapi/resetpin: true
+      - /fabric.service.eligibility.v1beta1.cardeligibilityapi/can: true
+  log:
+    level: debug
+    payloadDecider:
+      client:
+        - /fabric.service.entitlements.v1beta1.cardentitlementsapi/getentitledcard: true
+        - /fabric.service.entitlements.v1beta1.cardentitlementsapi/listentitledcards: true
+        - /fabric.service.entitlements.v1beta1.entitlementscontrolapi/forcepartytolatest: true
+        - /fabric.service.entitlements.v1beta1.entitlementscontrolapi/registercardtopersona: true
+        - /fabric.service.eligibility.v1beta1.cardeligibilityapi/can: false
+        - /fabric.service.selfservice.v1beta2.partyapi/getparty: true
+        - /fabric.service.accounts.v1alpha6.accountapi/getaccountlist: true
+      server:
+        - /fabric.service.card.v1beta1.cardapi/activate: true
+        - /fabric.service.card.v1beta1.cardapi/audittrail: true
+        - /fabric.service.card.v1beta1.cardapi/changepin: true
+        - /fabric.service.card.v1beta1.cardapi/getdetails: false
+        - /fabric.service.card.v1beta1.cardapi/getwrappingkey: false
+        - /fabric.service.card.v1beta1.cardapi/list: true
+        - /fabric.service.card.v1beta1.cardapi/replace: true
+        - /fabric.service.card.v1beta1.cardapi/setpin: true
+        - /fabric.service.card.v1beta1.cardapi/resetpin: true
+        - /fabric.service.card.v1beta1.cardapi/verifypin: true
+        - /fabric.service.eligibility.v1beta1.cardeligibilityapi/can: true
+  ocv:
+    baseURL: https://service-virtualisation-pnv.fabric.gcpnp.anz/ocv
+    clientIDEnvKey: projects/517918342546/secrets/apic-corp-client-id-np/versions/latest
+    enableLogging: true
+    maxRetries: 3
+  port: 8080
+  rateLimit:
+    limits:
+      activate:
+        period: 60000000000
+        rate: 5
+    prefix: intpnv
+    redis:
+      addr: 10.190.3.172:6378
+      secretId: projects/517918342546/secrets/memory-store-cards-nonprod/versions/latest
+      tlsCertId: projects/517918342546/secrets/memory-store-cert-cards-nonprod/versions/latest
+  selfService:
+    baseURL: http://selfservice.fabric-services-intpnv.svc.cluster.local:8080
+  vault:
+    vaultAddress: https://service-virtualisation-pnv.fabric.gcpnp.anz/vault
+    authRole: gcpiamrole-fabric-decode.common
+    authPath: v1/auth/gcp-fabric
+    namespace: eaas-test
+    zone: corp
+    metadataAddress: http://metadata.google.internal
+    tokenLifetime: 5m
+    tokenErrorRetryFirstTime: 500ms
+    tokenErrorRetryMaxTime: 5m
+    tokenRenewBuffer: 2m
+  visaGateway:
+    baseURL: http://visa-gateway.fabric-services-cde-intpnv.svc.cluster.local:9060
+    clientID: C721062A738A481B800BE5F7CC852602

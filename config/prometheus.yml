@@ -1,0 +1,20 @@
+global:
+  scrape_interval: 2s
+
+  external_labels:
+    monitor: 'cards'
+
+scrape_configs:
+  - job_name: 'cards'
+
+    scrape_interval: 2s
+
+    static_configs:
+      - targets: ['cardcontrols:8082',
+                  'cards:8082',
+                  'callback:8082',
+                  'visagateway:7082',
+                  'docker.for.mac.localhost:8082',
+                  'docker.for.mac.localhost:8072',
+                  'docker.for.mac.localhost:8062',
+                  'docker.for.mac.localhost:7082']

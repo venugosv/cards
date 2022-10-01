@@ -1,0 +1,14 @@
+name: sit
+serviceAccount:
+  email: callback-sit@anz-x-fabric-cde-np-ba0f52.iam.gserviceaccount.com
+scheduling:
+  replicas: 1
+tasks:
+#  - name: callback-integration-tests
+#    type: kubernetes
+#    image:
+#      repository: gcr.io/anz-x-fabric-np-641432/cards/cards-integration
+#    command:
+#      - "/bin/callback-integration.test"
+#      - "-test.v"
+#      - "--env=sit"

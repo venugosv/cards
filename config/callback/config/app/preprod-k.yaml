@@ -1,0 +1,56 @@
+spec:
+  port: 8080
+  log:
+    level: info
+    payloadDecider:
+      server:
+        - /visa.service.enrollmentcallback.v1.enrollmentcallbackapi/enroll: true
+        - /visa.service.enrollmentcallback.v1.enrollmentcallbackapi/disenroll: true
+        - /visa.service.notificationcallback.v1.notificationcallbackapi/alert: true
+  commandCentre:
+    env: preprod-k
+  ctm:
+    baseURL: http://apiqa.corp.dev.anz/daw
+    clientIDEnvKey: projects/517918342546/secrets/apic-corp-client-id-np/versions/latest
+    maxRetries: 3
+  vault:
+    vaultAddress: http://eaas.adp.np.sec.gcpnp.anz
+    authRole: gcpiamrole-fabric-encode.common
+    authPath: v1/auth/gcp-fabric
+    namespace: eaas-test
+    zone: corp
+    metadataAddress: http://metadata.google.internal
+    tokenLifetime: 15m
+    tokenErrorRetryFirstTime: 500ms
+    tokenErrorRetryMaxTime: 5m
+    tokenRenewBuffer: 2m
+  fakerock:
+    baseURL: https://fakerock-preprod-k.fabric.gcpnp.anz:443
+    clientID: f98cd157-932a-45ed-a68b-73d481a1d24c
+    clientSecretKey: FAKEROCK_CLIENT_SECRET
+  forgerock:
+    baseURL: https://identity-services-sit2-int-gw.apps-int.x.gcpnp.anz
+    clientID: fabric-visa-callback
+    clientSecretKey: projects/517918342546/secrets/callback-forgerock-secret-np/versions/latest
+  featureToggles:
+    rpc:
+      - /visa.service.enrollmentcallback.v1.enrollmentcallbackapi/enroll: true
+      - /visa.service.enrollmentcallback.v1.enrollmentcallbackapi/disenroll: true
+      - /visa.service.notificationcallback.v1.notificationcallbackapi/alert: true
+    features:
+      - ENROLLMENT_CALLBACK_INTEGRATED: false
+      - FORGEROCK_SYSTEM_LOGIN: true
+  certificates:
+    root: MIID+TCCAuGgAwIBAgIQW1fXqEywr9nTb0ugMbTW4jANBgkqhkiG9w0BAQUFADB5MQswCQYDVQQGEwJVUzENMAsGA1UEChMEVklTQTEvMC0GA1UECxMmVmlzYSBJbnRlcm5hdGlvbmFsIFNlcnZpY2UgQXNzb2NpYXRpb24xKjAoBgNVBAMTIVZpc2EgSW5mb3JtYXRpb24gRGVsaXZlcnkgUm9vdCBDQTAeFw0wNTA2MjcxNzQyNDJaFw0yNTA2MjkxNzQyNDJaMHkxCzAJBgNVBAYTAlVTMQ0wCwYDVQQKEwRWSVNBMS8wLQYDVQQLEyZWaXNhIEludGVybmF0aW9uYWwgU2VydmljZSBBc3NvY2lhdGlvbjEqMCgGA1UEAxMhVmlzYSBJbmZvcm1hdGlvbiBEZWxpdmVyeSBSb290IENBMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAyREA4R/QkkfpLx0cYjga/EhIPZpchH0MZsRZFfP6C2ITtf/Wc+MtgD4yTK0yoiXvni3d+aCtEgK3GDvkdgYrgF76ROJFZwUQjQ9lx42gRT05DbXvWFoy7dTglCZ9z/Tt2Cnktv9oxKgmkeHY/CyfpCBg1S8xth2JlGMR0ug/GMO5zANuegZOv438p5Lt5So+du2Gl+RMFQqEPwqN5uJSqAe0VtmB4gWdQ8onBj2ZAM2R73QW7UW0Igt2vA4JaSiNtaAG/Y/58VXWHGgbq7rDtNK1R30X0kJV0rGAib3RSwB3LpG7bOjbIucV5mQgJoVjoA1e05w6g1x/KmNTmOGRVwIDAQABo30wezAPBgNVHRMBAf8EBTADAQH/MDkGA1UdIAQyMDAwLgYFZ4EDAgEwJTAVBggrBgEFBQcCARYJMS4yLjMuNC41MAwGCCsGAQUFBwICMAAwDgYDVR0PAQH/BAQDAgEGMB0GA1UdDgQWBBRPitp2/2d3I5qmgH1924h1hfeBejANBgkqhkiG9w0BAQUFAAOCAQEACUW1QdUHdDJydgDPmYt+telnG/Su+DPaf1cregzlN43bJaJosMP7NwjoJY/H2He4XLWb5rXEkl+xH1UyUwF7mtaUoxbGxEvt8hPZSTB4da2mzXgwKvXuHyzF5Qjy1hOB0/pSWaF9ARpVKJJ7TOJQdGKBsF2Ty4fSCLqZLgfxbqwMsd9sysXI3rDXjIhekqvbgeLzPqZr+pfgFhwCCLSMQWl5Ll3u7Qk9wR094DZ6jj6+JCVCRUS3HyabH4OlM0Vc2K+jINsF/64Or7GNtRf9HYEJvrPxHINxl3JVwhYj4ASeaO4KwhVbwtw94Tc/XrGcexDoc5lC3rAi4/UZqweYCw==
+    intermediate: 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
+ops:
+  port: 8082
+  opentelemetry:
+    metrics:
+      exporter: collector
+    trace:
+      exporter: collector
+    exporters:
+      collector:
+        host: otelcol-otlp-grpc-preprod-ebbg6xakwa-ts.a.run.app:443
+        secure: true

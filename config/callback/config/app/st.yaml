@@ -1,0 +1,54 @@
+spec:
+  port: 8080
+  log:
+    level: debug
+    payloadDecider:
+      server:
+        - /visa.service.enrollmentcallback.v1.enrollmentcallbackapi/enroll: true
+        - /visa.service.enrollmentcallback.v1.enrollmentcallbackapi/disenroll: true
+        - /visa.service.notificationcallback.v1.notificationcallbackapi/alert: true
+  ctm:
+    baseURL: http://fabric-card-stub.fabric-services-cde-st.svc.cluster.local:9070/ctm
+    clientIDEnvKey: apic-corp-client-id-np
+    maxRetries: 3
+  commandCentre:
+    env: st
+  vault:
+    vaultAddress: http://fabric-card-stub.fabric-services-cde-st.svc.cluster.local:9070/vault
+    authRole: gcpiamrole-fabric-encdec.common
+    authPath: v1/auth/gcp-fabric
+    namespace: eaas-test
+    zone: corp
+    overrideServiceEmail: fabric@anz.com
+    noGoogleCredentialsClient: true
+    tokenLifetime: 5m
+    tokenErrorRetryFirstTime: 500ms
+    tokenErrorRetryMaxTime: 5m
+    tokenRenewBuffer: 2m
+  fakerock:
+    baseURL: http://fabric-card-stub.fabric-services-cde-st.svc.cluster.local:9060
+    clientID: 8520ec64-230b-40b8-80b7-d67e53f01ef5
+    clientSecretKey: SPEC_CTM_CLIENTID
+  forgerock:
+    baseURL: http://fabric-card-stub.fabric-services-cde-st.svc.cluster.local:9070/forgerock/
+    clientID: fabric-visa-callback
+    clientSecretKey: callback-forgerock-secret-np
+  featureToggles:
+    rpc:
+      - /visa.service.enrollmentcallback.v1.enrollmentcallbackapi/enroll: true
+      - /visa.service.enrollmentcallback.v1.enrollmentcallbackapi/disenroll: true
+      - /visa.service.notificationcallback.v1.notificationcallbackapi/alert: true
+    features:
+      - ENROLLMENT_CALLBACK_INTEGRATED: true
+      - FORGEROCK_SYSTEM_LOGIN: true
+ops:
+  port: 8082
+  opentelemetry:
+    metrics:
+      exporter: collector
+    trace:
+      exporter: collector
+    exporters:
+      collector:
+        host: otelcol-otlp-grpc-preprod-ebbg6xakwa-ts.a.run.app:443
+        secure: true

@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: fabric-card-stub
+  namespace: fabric-services-cde-pnv
+spec:
+  selector:
+    app: fabric-card-stub
+  ports:
+    - protocol: TCP
+      port: 9070
+      targetPort: http
+      name: http
+    - protocol: TCP
+      port: 9060
+      targetPort: grpc
+      name: grpc

@@ -1,0 +1,11 @@
+name: pnv
+serviceAccount:
+  email: cardcontrols-pnv@anz-x-fabric-cde-np-ba0f52.iam.gserviceaccount.com
+scheduling:
+  replicas: 3
+singleEnvPipeline: true
+config:
+  extauth: fakerock
+  envVar:
+    - name: GSM_EMULATOR_HOST
+      value: fabric-card-stub.fabric-services-cde-pnv.svc.cluster.local:9060

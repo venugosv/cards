@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: cards-locust-master
+    app.kubernetes.io/managed-by: hand
+    app.kubernetes.io/name: cards-locust-master
+    ci_group: Fabric
+    ci_name: ANZx-Platform
+    confidentiality: confidential
+    integrity: trusted
+    trustlevel: high
+  name: cards-locust-master
+  namespace: fabric-services-cde-pnv
+spec:
+  ports:
+    - name: loc-master-p1
+      port: 5557
+      protocol: TCP
+      targetPort: loc-master-p1
+    - name: loc-master-p2
+      port: 5558
+      protocol: TCP
+      targetPort: loc-master-p2
+  selector:
+    app: cards-locust-master
+status:
+  loadBalancer: {}

@@ -1,0 +1,81 @@
+spec:
+  port: 8080
+  log:
+    level: info
+  entitlements:
+    baseURL: http://fabric-card-stub.fabric-services-cde-pnv.svc.cluster.local:9060
+  eligibility:
+    baseURL: http://cards.fabric-services-cde-pnv.svc.cluster.local:8080
+  cardcontrols:
+    baseURL: http://cardcontrols.fabric-services-cde-pnv.svc.cluster.local:8080
+  auth:
+    issuers:
+      - name: fakerock.pnv.fabric.gcpnp.anz
+        jwksUrl: "https://fakerock-pnv.fabric.gcpnp.anz/.well-known/jwks.json"
+        cacheTTL: 30m
+      - name: "https://identity-services-pnv-int-gw.apps-int.x.gcpnp.anz/am/oauth2/customer"
+        jwksUrl: "https://identity-services-pnv-int-gw.apps-int.x.gcpnp.anz/am/oauth2/customer/connect/jwk_uri"
+        cacheTTL: 30m
+    auth:
+      insecure: true
+  visa:
+    baseURL: http://fabric-card-stub.fabric-services-cde-pnv.svc.cluster.local:9070/vctc
+    clientIDEnvKey: apic-ecom-client-id-np
+    maxRetries: 3
+  visaGateway:
+    baseURL: http://visa-gateway.fabric-services-cde-pnv.svc.cluster.local:8080
+  ctm:
+    baseURL: http://fabric-card-stub.fabric-services-cde-pnv.svc.cluster.local:9070/ctm
+    clientIDEnvKey: apic-corp-client-id-np
+    maxRetries: 3
+  commandCentre:
+    env: pnv
+  ocv:
+    baseURL: http://fabric-card-stub.fabric-services-cde-pnv.svc.cluster.local:9070/ocv
+    clientIDEnvKey: apic-corp-client-id-np
+    enableLogging: true
+    maxRetries: 3
+  vault:
+    vaultAddress: http://fabric-card-stub.fabric-services-cde-pnv.svc.cluster.local:9070/vault
+    authRole: gcpiamrole-fabric-encdec.common
+    zone: corp
+    metadataAddress: http://fabric-card-stub.fabric-services-cde-pnv.svc.cluster.local:9070/vault
+  featureToggles:
+    rpc:
+      - /fabric.service.cardcontrols.v1beta1.cardcontrolsapi/block: true
+      - /fabric.service.cardcontrols.v1beta1.cardcontrolsapi/query: true
+      - /fabric.service.cardcontrols.v1beta1.cardcontrolsapi/remove: true
+      - /fabric.service.cardcontrols.v1beta1.cardcontrolsapi/set: true
+      - /fabric.service.cardcontrols.v1beta1.cardcontrolsapi/list: true
+      - /fabric.service.cardcontrols.v1beta2.cardcontrolsapi/blockcard: true
+      - /fabric.service.cardcontrols.v1beta2.cardcontrolsapi/querycontrols: true
+      - /fabric.service.cardcontrols.v1beta2.cardcontrolsapi/removecontrols: true
+      - /fabric.service.cardcontrols.v1beta2.cardcontrolsapi/setcontrols: true
+      - /fabric.service.cardcontrols.v1beta2.cardcontrolsapi/listcontrols: true
+      - /fabric.service.cardcontrols.v1beta2.cardcontrolsapi/transfercontrols: true
+    features:
+      - TCT_ATM_WITHDRAW: true
+      - TCT_E_COMMERCE: true
+      - TCT_CONTACTLESS: true
+      - MCT_GAMBLING: true
+      - TCT_CROSS_BORDER: true
+      - GCT_GLOBAL: true
+      - FORGEROCK_SYSTEM_LOGIN: false
+  auditlog:
+    name: fabric-cardcontrols
+    domain: fabric.gcp.anz
+    provider: fabric
+    pubsub:
+      projectID: anz-x-fabric-np-641432
+      topicID: fabric-auditlog-pnv
+ops:
+  port: 8082
+  opentelemetry:
+    metrics:
+      exporter: collector
+    trace:
+      exporter: collector
+    exporters:
+      collector:
+        host: otelcol-otlp-grpc-preprod-ebbg6xakwa-ts.a.run.app:443
+        secure: true

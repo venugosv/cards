@@ -1,0 +1,63 @@
+timeout: 120s
+callback:
+  insecure: false
+  baseUrl: callback-sit.fabric.gcpnp.anz:443
+  currentCard: 4622393000000001
+  headers:
+    - Target
+    - stage
+  tearDown: true
+cardcontrols:
+  toggle:
+    v1beta2.CardControlsAPI/ListControls: true
+    v1beta2.CardControlsAPI/QueryControls: true
+    v1beta2.CardControlsAPI/SetControls: true
+    v1beta2.CardControlsAPI/RemoveControls: true
+    v1beta2.CardControlsAPI/BlockCard: false
+    v1beta2.CardControlsAPI/UnBlockCard: false
+  insecure: false
+  baseUrl: cardcontrols-sit.fabric.gcpnp.anz:443
+  auth:
+    env: sit
+    region: L
+    method: basic
+    frompool: true
+  headers:
+    - Target
+    - stage
+  tearDown: true
+cards:
+  toggle:
+    v1beta1.CardAPI/ReplaceDamaged: true
+    v1beta1.CardAPI/ReplaceLost: false
+    v1beta1.CardAPI/List: true
+    v1beta1.CardAPI/Activate: true
+    v1beta1.CardAPI/GetWrappingKey: true
+    v1beta1.CardAPI/SetPIN: true
+    v1beta1.CardAPI/ChangePIN: true
+    v1beta1.CardAPI/GetDetails: true
+    v1beta1.CardAPI/AuditTrail: true
+    v1beta1.WalletAPI/CreateApplePaymentToken: true
+    v1beta1.WalletAPI/CreateGooglePaymentToken: true
+  insecure: false
+  baseUrl: cards-sit.fabric.gcpnp.anz:443
+  auth:
+    env: sit
+    region: L
+    method: basic
+    frompool: true
+  tearDown: true
+  headers:
+    - Target
+    - stage
+vault:
+  vaultAddress: http://eaas.adp.np.sec.gcpnp.anz
+  authRole: gcpiamrole-fabric-decode.common
+  authPath: v1/auth/gcp-fabric
+  namespace: eaas-test
+  zone: corp
+  metadataAddress: http://metadata.google.internal
+  tokenLifetime: 15m
+  tokenErrorRetryFirstTime: 500ms
+  tokenErrorRetryMaxTime: 5m
+  tokenRenewBuffer: 2m

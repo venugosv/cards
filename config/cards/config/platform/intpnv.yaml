@@ -1,0 +1,8 @@
+name: intpnv
+serviceAccount:
+  email: cards-intpnv@anz-x-fabric-cde-np-ba0f52.iam.gserviceaccount.com
+scheduling:
+  replicas: 1
+config:
+  extauth: fakerock
+singleEnvPipeline: true

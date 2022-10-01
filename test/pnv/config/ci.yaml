@@ -1,0 +1,27 @@
+timeout: 15s
+maxuser: 10000
+callback:
+  insecure: true
+  baseUrl: callback:8080
+  currentCard: 4622393000000001
+cardcontrols:
+  insecure: true
+  baseUrl: cardcontrols:8080
+cards:
+  insecure: true
+  baseUrl: cards:8080
+  auth:
+    env: ci
+    method: "fakejwt"
+vault:
+  vaultAddress: http://stubs:9070/vault
+  authRole: gcpiamrole-fabric-encdec.common
+  authPath: v1/auth/gcp-fabric
+  namespace: eaas-test
+  zone: corp
+  metadataAddress: http://stubs:9070/vault
+  noGoogleCredentialsClient: true
+  tokenLifetime: 5m
+  tokenErrorRetryFirstTime: 500ms
+  tokenErrorRetryMaxTime: 5m
+  tokenRenewBuffer: 2m

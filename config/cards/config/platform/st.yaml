@@ -1,0 +1,38 @@
+name: st
+scheduling:
+  replicas: 1
+config:
+  extauth: fakerock
+tasks:
+  - name: cards-integration-test-grpc
+    type: kubernetes
+    kubernetes:
+      serviceAccount: cards
+      istioSidecar: true
+      automountServiceAccountToken: true
+    image:
+      repository: gcr.io/anz-x-fabric-np-641432/cards/cards-integration
+    env:
+      - name: TEST_CONFIG_FILE
+        value: ./config/st.yaml
+    command:
+      - "/bin/integration-cards.test"
+      - "-test.v"
+      - "-test.run"
+      - "GRPC"
+  - name: cards-integration-test-rest
+    type: kubernetes
+    kubernetes:
+      serviceAccount: cards
+      istioSidecar: true
+      automountServiceAccountToken: true
+    image:
+      repository: gcr.io/anz-x-fabric-np-641432/cards/cards-integration
+    env:
+      - name: TEST_CONFIG_FILE
+        value: ./config/st.yaml
+    command:
+      - "/bin/integration-cards.test"
+      - "-test.v"
+      - "-test.run"
+      - "REST"

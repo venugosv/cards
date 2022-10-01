@@ -1,0 +1,352 @@
+version: "3"
+services:
+  callback:
+    build:
+      context: .
+      dockerfile: cmd/callback/Dockerfile
+      args:
+        BASE_CARDS_IMAGE: ${BASE_CARDS_IMAGE}
+        BASE_RUNTIME_IMAGE: ${BASE_RUNTIME_IMAGE}
+        VERSION: ${VERSION}
+        REPOURL: ${REPO_URL}
+        COMMITHASH: ${COMMIT_SHORT_SHA}
+        BUILDLOGURL: ${BUILD_LOG_URL}
+        CONTAINERTAG: ${CALLBACK_CONTAINER_TAG}
+    image: ${CALLBACK_IMAGE}
+    container_name: callback
+    command: callback --config /config/app/ci.yaml
+    volumes:
+      - ./config/callback/config:/config
+    ports:
+      - ${CALLBACK_PORT}:${API_PORT}
+      - ${CALLBACK_OPS_PORT}:${OPS_PORT}
+    depends_on:
+      stubs:
+        condition: service_started
+      pubsub-health-check:
+        condition: service_healthy
+    environment:
+      - HTTP_PROXY=
+      - HTTPS_PROXY=
+      - NO_PROXY=
+      - https_proxy=
+      - http_proxy=
+      - GSM_EMULATOR_HOST=${GSM_EMULATOR_HOST}
+
+  cards:
+    build:
+      context: .
+      dockerfile: cmd/cards/Dockerfile
+      args:
+        BASE_CARDS_IMAGE: ${BASE_CARDS_IMAGE}
+        BASE_RUNTIME_IMAGE: ${BASE_RUNTIME_IMAGE}
+        VERSION: ${VERSION}
+        REPOURL: ${REPO_URL}
+        COMMITHASH: ${COMMIT_SHORT_SHA}
+        BUILDLOGURL: ${BUILD_LOG_URL}
+        CONTAINERTAG: ${CARDS_CONTAINER_TAG}}
+    image: ${CARDS_IMAGE}
+    container_name: cards
+    command: cards --config /config/app/ci.yaml
+    volumes:
+      - ./config/cards/config:/config
+    ports:
+      - ${CARDS_PORT}:${API_PORT}
+      - ${CARDS_OPS_PORT}:${OPS_PORT}
+    depends_on:
+      - pubsub
+      - auditlog
+      - redis
+      - stubs
+      - visa-gateway
+    environment:
+      - HTTP_PROXY=
+      - HTTPS_PROXY=
+      - NO_PROXY=
+      - https_proxy=
+      - http_proxy=
+      - GSM_EMULATOR_HOST=${GSM_EMULATOR_HOST}
+
+  cardcontrols:
+    build:
+      context: .
+      dockerfile: cmd/cardcontrols/Dockerfile
+      args:
+        BASE_CARDS_IMAGE: ${BASE_CARDS_IMAGE}
+        BASE_RUNTIME_IMAGE: ${BASE_RUNTIME_IMAGE}
+        VERSION: ${VERSION}
+        REPOURL: ${REPO_URL}
+        COMMITHASH: ${COMMIT_SHORT_SHA}
+        BUILDLOGURL: ${BUILD_LOG_URL}
+        CONTAINERTAG: ${CARDCONTROLS_CONTAINER_TAG}
+    image: ${CARDCONTROLS_IMAGE}
+    container_name: cardcontrols
+    command: cardcontrols --config /config/app/ci.yaml
+    volumes:
+      - ./config/cardcontrols/config:/config
+    ports:
+      - ${CARDCONTROLS_PORT}:${API_PORT}
+      - ${CARDCONTROLS_OPS_PORT}:${OPS_PORT}
+    depends_on:
+      cards-health-check:
+        condition: service_healthy
+      visagateway-health-check:
+        condition: service_healthy
+    environment:
+      - HTTP_PROXY=
+      - HTTPS_PROXY=
+      - NO_PROXY=
+      - https_proxy=
+      - http_proxy=
+      - GSM_EMULATOR_HOST=${GSM_EMULATOR_HOST}
+
+  integration:
+    build:
+      context: .
+      dockerfile: test/integration/Dockerfile
+      args:
+        BASE_IMAGE: ${BASE_IMAGE}
+        BASE_CARDS_IMAGE: ${BASE_CARDS_IMAGE}
+    image: ${INTEGRATION_IMAGE}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./${OUT_DIR}:/${OUT_DIR}
+    environment:
+      - HTTP_PROXY=
+      - HTTPS_PROXY=
+      - NO_PROXY=
+      - https_proxy=
+      - http_proxy=
+      - TEST_CONFIG_FILE=${TEST_CONFIG_FILE}
+
+  integration-callback:
+    extends: integration
+    depends_on:
+      callback-health-check:
+        condition: service_healthy
+    command: bash -c "set -o pipefail && go tool test2json /bin/integration-callback.test -test.v | tee /${OUT_DIR}/go_integration_test_callback.json"
+
+  integration-cardcontrols-grpc:
+    extends: integration
+    depends_on:
+      cardcontrols-health-check:
+        condition: service_healthy
+    command: bash -c "set -o pipefail && go tool test2json /bin/integration-cardcontrols.test -test.v GRPC | tee ${OUT_DIR}/go_integration_test_cardcontrols_grpc.json"
+
+  integration-cardcontrols-rest:
+    extends: integration
+    depends_on:
+      cardcontrols-health-check:
+        condition: service_healthy
+    command: bash -c "set -o pipefail && go tool test2json /bin/integration-cardcontrols.test -test.v REST | tee ${OUT_DIR}/go_integration_test_cardcontrols_rest.json"
+
+  integration-cards-rest:
+    extends: integration
+    depends_on:
+      cards-health-check:
+        condition: service_healthy
+      visagateway-health-check:
+        condition: service_healthy
+    command: bash -c "set -o pipefail && go tool test2json /bin/integration-cards.test -test.v -test.run REST | tee ${OUT_DIR}/go_integration_test_cards_rest.json"
+
+  integration-cards-grpc:
+    extends: integration
+    depends_on:
+      cards-health-check:
+        condition: service_healthy
+      visagateway-health-check:
+        condition: service_healthy
+    command: bash -c "set -o pipefail && go tool test2json /bin/integration-cards.test -test.v -test.run GRPC | tee ${OUT_DIR}/go_integration_test_cards_grpc.json"
+
+  pnv:
+    build:
+      context: .
+      dockerfile: test/pnv/Dockerfile
+      args:
+        BASE_IMAGE: ${BASE_IMAGE}
+        BASE_CARDS_IMAGE: ${BASE_CARDS_IMAGE}
+    image: ${PNV_IMAGE}
+    environment:
+      - HTTP_PROXY=
+      - HTTPS_PROXY=
+      - NO_PROXY=
+      - ENV=ci
+      - https_proxy=
+      - http_proxy=
+      - STANDALONE_ENABLE=true
+      - STANDALONE_COUNT=1
+      - STANDALONE_RATE=1
+      - STANDALONE_DURATION=6
+      - FAILFAST=true
+      - STANDALONE_THRESHOLD=
+      - TEST_CONFIG_FILE=${PNV_TEST_CONFIG_FILE}
+
+  pnv-cards:
+    extends: pnv
+    depends_on:
+      cards-health-check:
+        condition: service_healthy
+      visagateway-health-check:
+        condition: service_healthy
+    command: pnv-cards
+
+  stubs:
+    build:
+      context: .
+      dockerfile: test/stubs/Dockerfile
+      args:
+        BASE_IMAGE: ${BASE_IMAGE}
+        BASE_CARDS_IMAGE: ${BASE_CARDS_IMAGE}
+    image: ${STUBS_IMAGE}
+    container_name: cards_stub
+    ports:
+      - ${STUBS_GRPC_PORT}:${STUBS_GRPC_PORT}
+      - ${STUBS_HTTP_PORT}:${STUBS_HTTP_PORT}
+    environment:
+      - HTTP_PROXY=
+      - HTTPS_PROXY=
+      - NO_PROXY=
+      - https_proxy=
+      - http_proxy=
+      - LATENCY_ENABLED=${STUBS_LATENCY_ENABLED}
+
+  visa-gateway:
+    image: ${VISA_GATEWAY_IMAGE}
+    container_name: visagateway
+    command: visagateway --config config/visa-gateway.yaml
+    volumes:
+      - ./config/:/config
+    depends_on:
+      - visa-stub
+    ports:
+      - ${VISA_GATEWAY_API_PORT}:${VISA_GATEWAY_API_PORT}
+      - ${VISA_GATEWAY_OPS_PORT}:${VISA_GATEWAY_OPS_PORT}
+    environment:
+      - GSM_EMULATOR_HOST=http://visa-stub:7060
+      - HTTP_PROXY=
+      - HTTPS_PROXY=
+      - NO_PROXY=
+      - https_proxy=
+      - http_proxy=
+
+  visa-stub:
+    image: ${VISA_GATEWAY_STUB}
+    container_name: visa_stub
+    ports:
+      - ${VISA_GATEWAY_STUB_GRPC_PORT}:${VISA_GATEWAY_STUB_GRPC_PORT}
+      - ${VISA_GATEWAY_STUB_HTTP_PORT}:${VISA_GATEWAY_STUB_HTTP_PORT}
+    environment:
+      - HTTP_PROXY=
+      - HTTPS_PROXY=
+      - NO_PROXY=
+      - https_proxy=
+      - http_proxy=
+      - LATENCY_ENABLED=${STUBS_LATENCY_ENABLED}
+
+  jaeger:
+    image: ${JAEGER_IMAGE}
+    container_name: cards_jaeger
+    ports:
+      - 5778:5778
+      - 6831:6831/udp
+      - 6832:6832/udp
+      - 14268:14268
+      - 4250:14250
+      - 16686:16686
+
+  prometheus:
+    image: ${PROMETHEUS_IMAGE}
+    container_name: cards_prometheus
+    ports:
+      - 9090:9090
+    volumes:
+      - ./config/prometheus.yml:/etc/prometheus/prometheus.yml
+
+  pubsub:
+    image: ${PUBSUB_EMULATOR_IMAGE}
+    container_name: cards_pubsub
+    ports:
+      - ${PUBSUB_PORT}:${PUBSUB_PORT}
+    environment:
+      - PUBSUB_PORT=${PUBSUB_PORT}
+      - PUBSUB_PROJECT=test
+      - PUBSUB_TOPIC=commandcentre-events-local
+      - PUBSUB_SUBSCRIPTION=commandcentre-events.command-centre-local
+      - HTTP_PROXY=
+      - HTTPS_PROXY=
+      - NO_PROXY=
+      - https_proxy=
+      - http_proxy=
+
+  auditlog:
+    image: ${PUBSUB_EMULATOR_IMAGE}
+    container_name: cards_auditlog_pubsub
+    ports:
+      - ${AUDITLOG_PUBSUB_PORT}:${AUDITLOG_PUBSUB_PORT}
+    environment:
+      - PUBSUB_PORT=${AUDITLOG_PUBSUB_PORT}
+      - PUBSUB_PROJECT=auditlog
+      - PUBSUB_TOPIC=auditlog
+      - PUBSUB_SUBSCRIPTION=auditlog
+      - HTTP_PROXY=
+      - HTTPS_PROXY=
+      - NO_PROXY=
+      - https_proxy=
+      - http_proxy=
+
+  redis:
+    image: ${REDIS_EMULATOR_IMAGE}
+    container_name: cards_redis
+    command: redis-server --requirepass redispassword
+    ports:
+      - 6380:6380
+      - 6379:6379
+
+  health-check:
+    image: hub.artifactory.gcp.anz/curlimages/curl
+    environment:
+      - HTTP_PROXY=
+      - HTTPS_PROXY=
+      - NO_PROXY=
+      - https_proxy=
+      - http_proxy=
+    entrypoint: tail -f /dev/null
+    healthcheck:
+      timeout: 60s
+      interval: 1s
+      retries: 20
+
+  callback-health-check:
+    extends: health-check
+    depends_on:
+      - callback
+    healthcheck:
+      test: [ "CMD", "curl", "http://callback:${OPS_PORT}/healthz" ]
+
+  cards-health-check:
+    extends: health-check
+    depends_on:
+      - cards
+    healthcheck:
+      test: [ "CMD", "curl", "http://cards:${OPS_PORT}/healthz" ]
+
+  cardcontrols-health-check:
+    extends: health-check
+    depends_on:
+      - cardcontrols
+    healthcheck:
+      test: [ "CMD", "curl", "http://cardcontrols:${OPS_PORT}/healthz" ]
+
+  visagateway-health-check:
+    extends: health-check
+    depends_on:
+      - visa-gateway
+    healthcheck:
+      test: [ "CMD", "curl", "http://visa-gateway:${VISA_GATEWAY_OPS_PORT}/healthz" ]
+
+  pubsub-health-check:
+    extends: health-check
+    depends_on:
+      - pubsub
+    healthcheck:
+      test: ["CMD", "curl", "http://pubsub:${PUBSUB_PORT}"]

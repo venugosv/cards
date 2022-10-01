@@ -1,0 +1,36 @@
+timeout: 120s
+maxuser: 10000
+callback:
+  insecure: false
+  baseUrl: callback-pnv.fabric.gcpnp.anz:443
+  currentCard: 4622393000000001
+  headers:
+    - Target
+    - stage
+cardcontrols:
+  insecure: false
+  baseUrl: cardcontrols-pnv.fabric.gcpnp.anz:443
+  headers:
+    - Target
+    - stage
+cards:
+  insecure: false
+  baseUrl: cards-pnv.fabric.gcpnp.anz:443
+  auth:
+    env: pnv
+    method: fakejwt
+  headers:
+    - Target
+    - stage
+vault:
+  vaultAddress: http://fabric-card-stub.fabric-services-cde-pnv.svc.cluster.local:9070/vault
+  authRole: gcpiamrole-fabric-encdec.common
+  authPath: v1/auth/gcp-fabric
+  namespace: eaas-test
+  zone: corp
+  metadataAddress: http://fabric-card-stub.fabric-services-cde-pnv.svc.cluster.local:9070/vault
+  noGoogleCredentialsClient: true
+  tokenLifetime: 5m
+  tokenErrorRetryFirstTime: 500ms
+  tokenErrorRetryMaxTime: 5m
+  tokenRenewBuffer: 2m

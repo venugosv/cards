@@ -1,0 +1,61 @@
+timeout: 15s
+callback:
+  service:
+    insecure: true
+    baseUrl: callback:8080
+    auth:
+      env: ci
+      method: none
+      personaID: d91acf54-4c87-48aa-85a9-dd41c72c54d6
+  currentCard: 4622390358568090
+  pubsubTimeout: 2s
+cardcontrols:
+  toggle:
+    v1beta2.CardControlsAPI/ListControls: true
+    v1beta2.CardControlsAPI/QueryControls: true
+    v1beta2.CardControlsAPI/SetControls: true
+    v1beta2.CardControlsAPI/RemoveControls: true
+    v1beta2.CardControlsAPI/BlockCard: false
+    v1beta2.CardControlsAPI/UnBlockCard: false
+  insecure: true
+  baseUrl: cardcontrols:8080
+  auth:
+    env: ci
+    method: fakejwt
+    personaID: d91acf54-4c87-48aa-85a9-dd41c72c54d6
+cards:
+  toggle:
+    v1beta1.CardAPI/ReplaceDamaged: true
+    v1beta1.CardAPI/ReplaceLost: true
+    v1beta1.CardAPI/List: true
+    v1beta1.CardAPI/Activate: true
+    v1beta1.CardAPI/GetWrappingKey: true
+    v1beta1.CardAPI/SetPIN: true
+    v1beta1.CardAPI/ChangePIN: true
+    v1beta1.CardAPI/GetDetails: true
+    v1beta1.CardAPI/AuditTrail: true
+    v1beta1.WalletAPI/CreateApplePaymentToken: true
+    v1beta1.WalletAPI/CreateGooglePaymentToken: true
+  insecure: true
+  baseUrl: cards:8080
+  auth:
+    env: ci
+    method: fakejwt
+    personaID: d91acf54-4c87-48aa-85a9-dd41c72c54d6
+commandcentre:
+  projectid: test
+  topic: commandcentre-events-local
+  subscription: commandcentre-events.command-centre-local
+  emulatorHost: pubsub:8185
+vault:
+  vaultAddress: http://stubs:9070/vault
+  authRole: gcpiamrole-fabric-encdec.common
+  authPath: v1/auth/gcp-fabric
+  namespace: eaas-test
+  zone: corp
+  metadataAddress: http://stubs:9070/vault
+  noGoogleCredentialsClient: true
+  tokenLifetime: 5m
+  tokenErrorRetryFirstTime: 500ms
+  tokenErrorRetryMaxTime: 5m
+  tokenRenewBuffer: 2m

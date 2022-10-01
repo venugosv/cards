@@ -1,0 +1,40 @@
+name: pnv
+singleEnvPipeline: true
+scheduling:
+  replicas: 3
+config:
+  extauth: fakerock
+tasks:
+  - name: pnv-locust-test
+    type: locust
+    kubernetes:
+      namespace: fabric-services-cde-pnv
+      serviceAccount: cards
+      istioSidecar: true
+      automountServiceAccountToken: true
+    locust:
+      runtime: "2m"
+      master:
+        ghz: "https://ghz-web-pnv.fabric.gcpnp.anz"
+        image:
+          repository: gcr.io/anz-x-fabric-np-641432/fabric-pnv/locust
+          tag: v0.6.0
+        env:
+          - name: PNV_TAG_GIT_VERSION
+            value: ${_FAB_VERSION}
+          - name: PNV_TAG_GIT_REPO
+            value: "https://github.com/anzx/fabric-cards"
+      worker:
+        workers: 3
+        backoffLimit: 18
+        image:
+          repository: "gcr.io/anz-x-fabric-np-641432/cards/pnv"
+        command: [ "pnv-cards" ]
+        env:
+          - name: ADDR
+            value: "cards-pnv.fabric.gcpnp.anz:443"
+          - name: INSECURE
+            value: "false"
+          - name: TEST_CONFIG_FILE
+            value: "/config/pnv.yaml"
+      users: 3

@@ -1,0 +1,23 @@
+spec:
+  port: 8080
+  log:
+    level: info
+  featureToggles:
+    rpc:
+      - /visa.service.enrollmentcallback.v1.enrollmentcallbackapi/enroll: true
+      - /visa.service.enrollmentcallback.v1.enrollmentcallbackapi/disenroll: true
+      - /visa.service.notificationcallback.v1.notificationcallbackapi/alert: true
+    features:
+      - ENROLLMENT_CALLBACK_INTEGRATED: false
+      - FORGEROCK_SYSTEM_LOGIN: false
+ops:
+  port: 8082
+  opentelemetry:
+    metrics:
+      exporter: collector
+    trace:
+      exporter: collector
+    exporters:
+      collector:
+        host: otelcol-otlp-grpc-preprod-ebbg6xakwa-ts.a.run.app:443
+        secure: true

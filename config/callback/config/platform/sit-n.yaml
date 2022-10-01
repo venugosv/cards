@@ -1,0 +1,6 @@
+name: sit-n
+serviceAccount:
+  email: callback-sit-n@anz-x-fabric-cde-np-ba0f52.iam.gserviceaccount.com
+scheduling:
+  replicas: 1
+singleEnvPipeline: true

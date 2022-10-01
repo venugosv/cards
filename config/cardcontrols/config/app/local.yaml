@@ -1,0 +1,109 @@
+spec:
+  port: 8070
+  log:
+    level: debug
+    payloadDecider:
+      client:
+        - /fabric.service.entitlements.v1beta1.cardentitlementsapi/getentitledcard: true
+        - /fabric.service.entitlements.v1beta1.cardentitlementsapi/listentitledcards: true
+        - /fabric.service.eligibility.v1beta1.cardeligibilityapi/can: false
+        - /gateway.visa.service.customerrules.v1.customerrulesapi/createcontrols: true
+        - /gateway.visa.service.customerrules.v1.customerrulesapi/deletecontrols: true
+        - /gateway.visa.service.customerrules.v1.customerrulesapi/getcontroldocument: true
+        - /gateway.visa.service.customerrules.v1.customerrulesapi/listcontroldocuments: true
+        - /gateway.visa.service.customerrules.v1.customerrulesapi/register: true
+        - /gateway.visa.service.customerrules.v1.customerrulesapi/updateaccount: true
+        - /gateway.visa.service.customerrules.v1.customerrulesapi/updatecontrols: true
+      server:
+        - /fabric.service.cardcontrols.v1beta1.cardcontrolsapi/list: true
+        - /fabric.service.cardcontrols.v1beta1.cardcontrolsapi/block: true
+        - /fabric.service.cardcontrols.v1beta1.cardcontrolsapi/query: true
+        - /fabric.service.cardcontrols.v1beta1.cardcontrolsapi/remove: true
+        - /fabric.service.cardcontrols.v1beta1.cardcontrolsapi/set: true
+        - /fabric.service.cardcontrols.v1beta2.cardcontrolsapi/blockcard: true
+        - /fabric.service.cardcontrols.v1beta2.cardcontrolsapi/querycontrols: true
+        - /fabric.service.cardcontrols.v1beta2.cardcontrolsapi/removecontrols: true
+        - /fabric.service.cardcontrols.v1beta2.cardcontrolsapi/setcontrols: true
+        - /fabric.service.cardcontrols.v1beta2.cardcontrolsapi/listcontrols: true
+        - /fabric.service.cardcontrols.v1beta2.cardcontrolsapi/transfercontrols: true
+  auth:
+    insecure: true
+  entitlements:
+    baseURL: http://localhost:9060
+  eligibility:
+    baseURL: http://localhost:8070
+  cardcontrols:
+    baseURL: http://localhost:8080
+  visa:
+    baseURL: http://localhost:9070/vctc
+    clientIDEnvKey: apic-ecom-client-id-np
+    maxRetries: 3
+  visaGateway:
+    baseURL: http://localhost:7080
+  ctm:
+    baseURL: http://localhost:9070/ctm
+    clientIDEnvKey: apic-corp-client-id-np
+    maxRetries: 3
+  commandCentre:
+    env: local
+    pubsubEmulatorHost: localhost:8185
+  ocv:
+    baseURL: http://localhost:9070/ocv
+    clientIDEnvKey: apic-corp-client-id-np
+    enableLogging: true
+    maxRetries: 3
+  vault:
+    vaultAddress: http://localhost:9070/vault
+    authRole: gcpiamrole-fabric-encdec.common
+    authPath: v1/auth/gcp-fabric
+    namespace: eaas-test
+    zone: corp
+    overrideServiceEmail: fabric@anz.com
+    noGoogleCredentialsClient: true
+    tokenLifetime: 5m
+    tokenErrorRetryFirstTime: 500ms
+    tokenErrorRetryMaxTime: 5m
+    tokenRenewBuffer: 2m
+  forgerock:
+    baseURL: http://localhost:9070/forgerock/
+    clientID: fabric-cardcontrols
+    clientSecretKey: cardcontrols-forgerock-secret-np
+  featureToggles:
+    rpc:
+      - /fabric.service.cardcontrols.v1beta1.cardcontrolsapi/block: true
+      - /fabric.service.cardcontrols.v1beta1.cardcontrolsapi/query: true
+      - /fabric.service.cardcontrols.v1beta1.cardcontrolsapi/remove: true
+      - /fabric.service.cardcontrols.v1beta1.cardcontrolsapi/set: true
+      - /fabric.service.cardcontrols.v1beta1.cardcontrolsapi/list: true
+      - /fabric.service.cardcontrols.v1beta2.cardcontrolsapi/blockcard: true
+      - /fabric.service.cardcontrols.v1beta2.cardcontrolsapi/querycontrols: true
+      - /fabric.service.cardcontrols.v1beta2.cardcontrolsapi/removecontrols: true
+      - /fabric.service.cardcontrols.v1beta2.cardcontrolsapi/setcontrols: true
+      - /fabric.service.cardcontrols.v1beta2.cardcontrolsapi/listcontrols: true
+      - /fabric.service.cardcontrols.v1beta2.cardcontrolsapi/transfercontrols: true
+    features:
+      - TCT_ATM_WITHDRAW: true
+      - TCT_E_COMMERCE: true
+      - TCT_CONTACTLESS: true
+      - MCT_GAMBLING: true
+      - DCVV2: true
+      - TCT_CROSS_BORDER: true
+      - FORGEROCK_SYSTEM_LOGIN: true
+  auditlog:
+    name: fabric-cardcontrols
+    domain: fabric.gcp.anz
+    provider: fabric
+    pubsub:
+      emulatorHost: localhost:8086
+      projectID: auditlog
+      topicID: auditlog
+ops:
+  port: 8082
+  opentelemetry:
+    metrics:
+      exporter: prometheus
+    trace:
+      exporter: jaeger
+    exporters:
+      jaeger:
+        collectorEndpoint: http://localhost:14268/api/traces

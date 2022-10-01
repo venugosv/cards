@@ -1,0 +1,53 @@
+spec:
+  port: 8080
+  log:
+    level: debug
+    payloadDecider:
+      server:
+        - /visa.service.enrollmentcallback.v1.enrollmentcallbackapi/enroll: true
+        - /visa.service.enrollmentcallback.v1.enrollmentcallbackapi/disenroll: true
+        - /visa.service.notificationcallback.v1.notificationcallbackapi/alert: true
+  auth:
+    insecure: true
+  ctm:
+    baseURL: http://stubs:9070/ctm
+    clientIDEnvKey: apic-corp-client-id-np
+    maxRetries: 3
+  commandCentre:
+    env: local
+    pubsubEmulatorHost: pubsub:8185
+  vault:
+    vaultAddress: http://stubs:9070/vault
+    authRole: gcpiamrole-fabric-encdec.common
+    authPath: v1/auth/gcp-fabric
+    namespace: eaas-test
+    zone: corp
+    overrideServiceEmail: fabric@anz.com
+    noGoogleCredentialsClient: true
+    tokenLifetime: 5m
+    tokenErrorRetryFirstTime: 500ms
+    tokenErrorRetryMaxTime: 5m
+    tokenRenewBuffer: 2m
+  forgerock:
+    baseURL: http://stubs:9070/forgerock/
+    clientID: fabric-visa-callback
+    clientSecretKey: callback-forgerock-secret-np
+  featureToggles:
+    rpc:
+      - /visa.service.enrollmentcallback.v1.enrollmentcallbackapi/enroll: true
+      - /visa.service.enrollmentcallback.v1.enrollmentcallbackapi/disenroll: true
+      - /visa.service.notificationcallback.v1.notificationcallbackapi/alert: true
+    features:
+      - ENROLLMENT_CALLBACK_INTEGRATED: true
+      - FORGEROCK_SYSTEM_LOGIN: true
+      - NOTIFICATION_CALLBACK_DECLINED_EVENT: true
+ops:
+  port: 8082
+  opentelemetry:
+    metrics:
+      exporter: prometheus
+    trace:
+      exporter: jaeger
+    exporters:
+      jaeger:
+        collectorEndpoint: http://jaeger:14268/api/traces

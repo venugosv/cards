@@ -1,0 +1,22 @@
+name: st
+scheduling:
+  replicas: 1
+config:
+  envVar:
+    - name: GSM_EMULATOR_HOST
+      value: fabric-card-stub.fabric-services-cde-st.svc.cluster.local:9060
+tasks:
+  - name: callback-integration-tests
+    type: kubernetes
+    kubernetes:
+      serviceAccount: callback
+      istioSidecar: true
+      automountServiceAccountToken: true
+    image:
+      repository: gcr.io/anz-x-fabric-np-641432/cards/cards-integration
+    env:
+      - name: TEST_CONFIG_FILE
+        value: ./config/st.yaml
+    command:
+      - "/bin/integration-callback.test"
+      - "-test.v"

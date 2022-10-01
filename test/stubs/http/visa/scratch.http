@@ -1,0 +1,103 @@
+### Query By Pan NOT_ENROLLED
+POST http://localhost:5000//vctc/customerrules/consumertransactioncontrols/inquiries/cardinquiry
+Content-Type: application/json
+
+{
+  "primaryAccountNumber": "1234567890123456"
+}
+
+### All Controls
+POST http://localhost:5000//vctc/customerrules/consumertransactioncontrols/inquiries/cardinquiry
+Content-Type: application/json
+
+{
+  "primaryAccountNumber": "4622390512341000"
+}
+
+### Global Controls
+POST http://localhost:5000//vctc/customerrules/consumertransactioncontrols/inquiries/cardinquiry
+Content-Type: application/json
+
+{
+  "primaryAccountNumber": "4622390512342000"
+}
+
+### No Controls
+POST http://localhost:5000//vctc/customerrules/consumertransactioncontrols/inquiries/cardinquiry
+Content-Type: application/json
+
+{
+  "primaryAccountNumber": "4622390512343000"
+}
+
+### Enrol By PAN Success
+POST http://localhost:5000/vctc/customerrules/consumertransactioncontrols
+Content-Type: application/json
+
+{
+  "primaryAccountNumber": "4622390512343000"
+}
+
+<> 2020-03-18T013347.200.txt
+
+### Failure
+POST http://localhost:5000/vctc/customerrules/consumertransactioncontrols
+Content-Type: application/json
+
+{
+  "primaryAccountNumber": "1234567890123456"
+}
+
+<> 2020-03-18T030408.200.txt
+
+### card replacement Success
+POST http://localhost:5000/vctc/customerrules/consumertransactioncontrols/accounts/accountupdate
+Content-Type: application/json
+
+{
+  "currentAccountID": "4622390512343000",
+  "newAccountID": "4622390512342000"
+}
+
+### Failed
+POST http://localhost:5000/vctc/customerrules/consumertransactioncontrols/accounts/accountupdate
+Content-Type: application/json
+
+{
+  "currentAccountID": "123456789009876",
+  "newAccountID": "0987654321123456"
+}
+
+### create control
+POST http://localhost:5000/vctc/customerrules/consumertransactioncontrols/ctc-vn-48f310ca-3b0c-4a6a-8a4f-595bed2889c2/rules
+Content-Type: application/json
+
+{
+  "globalControls": [
+    {
+      "isControlEnabled": false,
+      "shouldAlertOnDecline": false,
+      "shouldDeclineAll": false,
+      "userIdentifier": "abhi-539d-4f93-ba00-77ef9ff873a2",
+      "alertThreshold": 15
+    }
+  ]
+}
+
+### Update control
+PUT http://localhost:5000/vctc/customerrules/consumertransactioncontrols/ctc-vn-48f310ca-3b0c-4a6a-8a4f-595bed2889c2/rules
+Content-Type: application/json
+
+{
+  "globalControls": [
+    {
+      "isControlEnabled": false,
+      "shouldAlertOnDecline": false,
+      "shouldDeclineAll": false,
+      "userIdentifier": "abhi-539d-4f93-ba00-77ef9ff873a2",
+      "alertThreshold": 15
+    }
+  ]
+}
+
+###

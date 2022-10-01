@@ -1,0 +1,7 @@
+name: intpnv
+serviceAccount:
+  email: cardcontrols-intpnv@anz-x-fabric-cde-np-ba0f52.iam.gserviceaccount.com
+scheduling:
+  replicas: 3
+singleEnvPipeline: true
+

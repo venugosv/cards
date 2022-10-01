@@ -1,0 +1,7 @@
+name: intpnv
+serviceAccount:
+  email: callback-intpnv@anz-x-fabric-cde-np-ba0f52.iam.gserviceaccount.com
+scheduling:
+  replicas: 1
+singleEnvPipeline: true
+

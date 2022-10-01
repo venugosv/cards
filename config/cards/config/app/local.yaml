@@ -1,0 +1,123 @@
+---
+ops:
+  opentelemetry:
+    exporters:
+      jaeger:
+        collectorEndpoint: http://localhost:14268/api/traces
+    metrics:
+      exporter: prometheus
+    trace:
+      exporter: jaeger
+  port: 8072
+spec:
+  apcam:
+    baseURL: http://localhost:9070/apcam
+    clientIDEnvKey: apic-ecom-client-id-np
+    maxRetries: 3
+  auditlog:
+    domain: fabric.gcp.anz
+    name: fabric-cards
+    provider: fabric
+    pubsub:
+      emulatorHost: localhost:8086
+      projectID: auditlog
+      topicID: auditlog
+  cardcontrols:
+    baseURL: http://localhost:8080
+  commandCentreEnv: local
+  ctm:
+    baseURL: http://localhost:9070/ctm
+    clientIDEnvKey: apic-corp-client-id-np
+    maxRetries: 3
+  echidna:
+    baseURL: http://localhost:9070/ca
+    clientIDEnvKey: apic-ecom-client-id-np
+    maxRetries: 3
+  eligibility:
+    baseURL: http://localhost:8070
+  entitlements:
+    baseURL: http://localhost:9060
+  forgerock:
+    baseURL: http://localhost:9070/forgerock/
+    clientID: fabric-cards
+    clientSecretKey: cards-forgerock-secret-np
+  gpay:
+    apiKeyKey: wallet-visa-api-key-np
+    sharedSecretKey: wallet-visa-shared-secret-np
+  featureToggles:
+    features:
+      - REASON_LOST: true
+      - REASON_STOLEN: true
+      - REASON_DAMAGED: true
+      - PIN_CHANGE_COUNT: true
+      - DCVV2: true
+      - FORGEROCK_SYSTEM_LOGIN: true
+    rpc:
+      - /fabric.service.card.v1beta1.cardapi/activate: true
+      - /fabric.service.card.v1beta1.cardapi/audittrail: true
+      - /fabric.service.card.v1beta1.cardapi/changepin: true
+      - /fabric.service.card.v1beta1.cardapi/getdetails: true
+      - /fabric.service.card.v1beta1.cardapi/getwrappingkey: true
+      - /fabric.service.card.v1beta1.cardapi/list: true
+      - /fabric.service.card.v1beta1.cardapi/replace: true
+      - /fabric.service.card.v1beta1.cardapi/setpin: true
+      - /fabric.service.card.v1beta1.cardapi/verifypin: true
+      - /fabric.service.card.v1beta1.cardapi/resetpin: true
+      - /fabric.service.eligibility.v1beta1.cardeligibilityapi/can: true
+      - /fabric.service.card.v1beta1.walletapi/createapplepaymenttoken: true
+      - /fabric.service.card.v1beta1.walletapi/creategooglepaymenttoken: true
+  auth:
+    insecure: true
+  log:
+    level: debug
+    payloadDecider:
+      client:
+        - /fabric.service.entitlements.v1beta1.cardentitlementsapi/getentitledcard: true
+        - /fabric.service.entitlements.v1beta1.cardentitlementsapi/listentitledcards: true
+        - /fabric.service.entitlements.v1beta1.entitlementscontrolapi/forcepartytolatest: true
+        - /fabric.service.entitlements.v1beta1.entitlementscontrolapi/registercardtopersona: true
+        - /fabric.service.eligibility.v1beta1.cardeligibilityapi/can: false
+        - /fabric.service.selfservice.v1beta2.partyapi/getparty: true
+        - /fabric.service.accounts.v1alpha6.accountapi/getaccountlist: true
+      server:
+        - /fabric.service.card.v1beta1.cardapi/activate: true
+        - /fabric.service.card.v1beta1.cardapi/audittrail: true
+        - /fabric.service.card.v1beta1.cardapi/changepin: true
+        - /fabric.service.card.v1beta1.cardapi/getdetails: false
+        - /fabric.service.card.v1beta1.cardapi/getwrappingkey: false
+        - /fabric.service.card.v1beta1.cardapi/list: true
+        - /fabric.service.card.v1beta1.cardapi/replace: true
+        - /fabric.service.card.v1beta1.cardapi/setpin: true
+        - /fabric.service.card.v1beta1.cardapi/resetpin: true
+        - /fabric.service.card.v1beta1.cardapi/verifypin: true
+        - /fabric.service.eligibility.v1beta1.cardeligibilityapi/can: true
+  ocv:
+    baseURL: http://localhost:9070/ocv
+    clientIDEnvKey: apic-corp-client-id-np
+    maxRetries: 3
+  port: 8080
+  rateLimit:
+    limits:
+      activate:
+        period: 60000000000
+        rate: 5
+    redis:
+      addr: localhost:6379
+      secretId: testSecretId
+  selfService:
+    baseURL: http://localhost:9060
+  vault:
+    vaultAddress: http://localhost:9070/vault
+    authRole: gcpiamrole-fabric-encdec.common
+    authPath: v1/auth/gcp-fabric
+    namespace: eaas-test
+    zone: corp
+    overrideServiceEmail: fabric@anz.com
+    noGoogleCredentialsClient: true
+    tokenLifetime: 5m
+    tokenErrorRetryFirstTime: 500ms
+    tokenErrorRetryMaxTime: 5m
+    tokenRenewBuffer: 2m
+  visaGateway:
+    baseURL: http://localhost:7080
+    clientID: c5934653-ff6a-46cb-81aa-850f50e6f95b

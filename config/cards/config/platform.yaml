@@ -1,0 +1,20 @@
+apiVersion: fabric.anz/v1alpha1
+kind: FabricKubeApp
+metadata:
+  name: cards
+  namespacePrefix: fabric-services-cde
+spec:
+  application:
+    image:
+      repository: gcr.io/anz-x-fabric-np-641432/cards/cards
+
+envs:
+  - filePath: ./config/cards/config/platform/st.yaml
+  - filePath: ./config/cards/config/platform/sit.yaml
+  - filePath: ./config/cards/config/platform/sit-n.yaml
+  - filePath: ./config/cards/config/platform/sit-k.yaml
+  - filePath: ./config/cards/config/platform/intpnv.yaml
+  - filePath: ./config/cards/config/platform/pnv.yaml
+  - filePath: ./config/cards/config/platform/preprod.yaml
+  - filePath: ./config/cards/config/platform/preprod-k.yaml
+  - filePath: ./config/cards/config/platform/prod.yaml
