@@ -4,7 +4,7 @@
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: fabric-cards
+  name: cards
   description: Cards - An interface for Card Activation, Select PIN & Replacement. Provides a powerful and convenient way for cardholders to track and manage all payment activity on enrolled accounts and tokens
   tags:
     - golang
@@ -17,13 +17,13 @@ metadata:
       icon: Link
   annotations:
     backstage.io/techdocs-ref: dir:.
-    github.com/project-slug: anzx/fabric-cards
+    github.com/project-slug: venugosv/cards
     sonarqube.org/project-key: ghb:fabric-cards
     atlas/app-name: ANZx::Fabric::Cards
     backstage.io/kubernetes-label-selector: app=cards
 spec:
   type: service
-  owner: fab-cards
+  owner: venugosv
   lifecycle: production
   system: fabric
   providesApis:
