@@ -21,3 +21,28 @@ metadata:
     sonarqube.org/project-key: ghb:fabric-cards
     atlas/app-name: ANZx::Fabric::Cards
     backstage.io/kubernetes-label-selector: app=cards
+spec:
+  type: service
+  owner: venugosv
+  lifecycle: production
+  system: fabric
+  providesApis:
+    - fabric.service.card.v1beta1.CardAPI
+    - fabric.service.eligibility.v1beta1.CardEligibilityAPI
+    - fabric.service.card.v1beta1.WalletAPI
+  consumesApis:
+    - fabric.service.eligibility.v1beta1.CardEligibilityAPI
+    - fabric.service.entitlements.v1beta1.CardEntitlementsAPI
+    - fabric.service.entitlements.v1beta1.EntitlementsControlAPI
+    - fabric.service.fakerock.v1alpha1.FakerockAPI
+    - fabric.service.selfservice.v1beta2.PartyAPIClient
+    - fabric.service.commandcentre.v1beta1.CommandsAPI
+    - anz.ctm.debitcards.debitcardinquiry
+    - anz.ctm.debitcards.debitcardstatus
+    - anz.ctm.debitcards.debitcardmaintenance
+    - anz.echidna.cardandpinservices
+    - anz.ocv.retrieveparty
+    - anz.ocv.maintaincontract
+    - anz.adp.transform
+    - fabric.service.cardcontrols.v1beta2.CardControlsAPI
+    - gateway.visa.service.dcvv2.v1.DCVV2API
