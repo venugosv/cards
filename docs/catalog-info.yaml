@@ -18,9 +18,6 @@ metadata:
   annotations:
     backstage.io/techdocs-ref: dir:.
     github.com/project-slug: venugosv/cards
-    sonarqube.org/project-key: ghb:fabric-cards
-    atlas/app-name: ANZx::Fabric::Cards
-    backstage.io/kubernetes-label-selector: app=cards
 spec:
   type: service
   owner: venugosv
