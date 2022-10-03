@@ -3,8 +3,18 @@ site_url: https://archspecs.com/
 repo_url: https://github.com/venugosv/cards
 nav:
     - Overview: index.md
+    - Dev Manual: developer-manual.md
+    - Integration:
+        - Audit Log: audit-log.md
+        - CTM: ctm.md
+        - Echidna: echidna.md
+        - ADP Vault: vault.md
+    - Non-Functionals: nfr.md
     - Design:
       - DCVV2 : Design/dcvv2.md
+    - Run Book: run-book.md
+    - Tech Principles: tech-principles.md
+    - Security: security-policy-datacontrols.md
 theme:
     name: material
 markdown_extensions:
