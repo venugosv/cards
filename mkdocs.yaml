@@ -16,3 +16,4 @@ markdown_extensions:
 plugins:
   - search
   - techdocs-core
+  - kroki
