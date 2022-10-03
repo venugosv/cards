@@ -8,13 +8,6 @@ metadata:
   description: Cards - An interface for Card Activation, Select PIN & Replacement. Provides a powerful and convenient way for cardholders to track and manage all payment activity on enrolled accounts and tokens
   tags:
     - golang
-  links:
-    - title: Slack
-      url: slack://channel?id=C011QKDCGTB
-      icon: Chat
-    - title: Splunk
-      url: https://anzx.splunkcloud.com/en-GB/app/search/search?q=search%20index%3D%22fabric_events_nonprod%22%20container_name%3Dcards&display.page.search.mode=smart&dispatch.sample_ratio=1&workload_pool=standard_perf&earliest=-30m%40m&latest=now&sid=1643770560.60221_CD04F90B-DFD6-4A22-BF34-06D82B207118
-      icon: Link
   annotations:
     backstage.io/techdocs-ref: dir:.
     github.com/project-slug: venugosv/cards
@@ -22,25 +15,4 @@ spec:
   type: service
   owner: venugosv
   lifecycle: production
-  system: fabric
-  providesApis:
-    - fabric.service.card.v1beta1.CardAPI
-    - fabric.service.eligibility.v1beta1.CardEligibilityAPI
-    - fabric.service.card.v1beta1.WalletAPI
-  consumesApis:
-    - fabric.service.eligibility.v1beta1.CardEligibilityAPI
-    - fabric.service.entitlements.v1beta1.CardEntitlementsAPI
-    - fabric.service.entitlements.v1beta1.EntitlementsControlAPI
-    - fabric.service.fakerock.v1alpha1.FakerockAPI
-    - fabric.service.selfservice.v1beta2.PartyAPIClient
-    - fabric.service.commandcentre.v1beta1.CommandsAPI
-    - anz.ctm.debitcards.debitcardinquiry
-    - anz.ctm.debitcards.debitcardstatus
-    - anz.ctm.debitcards.debitcardmaintenance
-    - anz.echidna.cardandpinservices
-    - anz.ocv.retrieveparty
-    - anz.ocv.maintaincontract
-    - anz.adp.transform
-    - fabric.service.cardcontrols.v1beta2.CardControlsAPI
-    - gateway.visa.service.dcvv2.v1.DCVV2API
 ---
