@@ -3,6 +3,8 @@ site_url: https://archspecs.com/
 repo_url: https://github.com/venugosv/cards
 nav:
     - Overview: index.md
+    - Design:
+      - DCVV2 : dcvv2.md
 theme:
     name: material
 markdown_extensions:
