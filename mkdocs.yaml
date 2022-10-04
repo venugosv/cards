@@ -1,8 +1,9 @@
-site_name: Architecture Specs
+site_name: Engineering Specs
 site_url: https://archspecs.com/
 repo_url: https://github.com/venugosv/cards
 nav:
     - Overview: index.md
+    - Architecture: https://github.com/venugosv/architecture/blob/main/docs/DCVV2.md
     - Dev Manual: developer-manual.md
     - Integration:
         - Audit Log: integration/audit-log.md
@@ -27,3 +28,4 @@ plugins:
   - search
   - techdocs-core
   - kroki
+  - monorepo
