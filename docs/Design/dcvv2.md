@@ -18,7 +18,7 @@ service enables issuers to trial and launch dCVV2 capability with minimal host d
         Convert service, that can replace the dCVV2 code in authorization messages with a static CVV2, so issuers do not need to
         identify and treat transactions with dCVV2 as exceptions.
 
-    === "Fraud Reuction"
+    === "Fraud Reduction"
 
         Fraud occuring in the remote or card-absent environment is not generally the financial responsibility of issuer; however, while the cost of the transaction itself may be offset, issuers still incur significant costs associated with fraud investigation, customer service, replacement card production and distribution,  reduced future usage and customer attrition.
         As stolen dCVV2 can be identified and declined by issuers, it can help reduce remote commerce fraud, and cards may not need to be replaced in the event of a data compromise.
