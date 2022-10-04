@@ -28,4 +28,3 @@ plugins:
   - search
   - techdocs-core
   - kroki
-  - monorepo
