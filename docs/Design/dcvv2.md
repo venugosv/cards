@@ -42,7 +42,7 @@ the [GetDetails API](https://backstage.fabric.gcpnp.anz/docs/default/API/fabric.
 
 <!--![](../assets/dcvv2_integration.png)-->
 <!--![](../assets/architecture/docs/img/so.png)-->
-![]("https://github.com/venugosv/architecture/blob/main/docs/img/so.png")
+![Solution Overview]("https://github.com/venugosv/architecture/blob/main/docs/img/so.png")
 
 
 The rest of the payment processing flow is as normal, when VisaNet recieves a payment request with a DCVV2 code in it,
