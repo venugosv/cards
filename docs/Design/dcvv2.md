@@ -41,7 +41,7 @@ the [GetDetails API](https://backstage.fabric.gcpnp.anz/docs/default/API/fabric.
 .
 
 <!--![](../assets/dcvv2_integration.png)-->
-![]("../assets/architecture/docs/img/DCVV2 Inhouse SO.png")
+![](../assets/architecture/docs/img/so.png)
 
 The rest of the payment processing flow is as normal, when VisaNet recieves a payment request with a DCVV2 code in it,
 it will convert the dynamic value into static before sending the advice through to the switch.
